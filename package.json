@@ -1,0 +1,13 @@
+{
+  "name": "mario-tips-ai",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Pesquisa de jogos de futebol de clubes e seleções com API-Football",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

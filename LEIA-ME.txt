@@ -1,0 +1,46 @@
+MÁRIO TIPS AI 3.0 — Pesquisa universal de clubes e seleções
+
+O QUE ESTA VERSÃO FAZ
+- Pesquisa jogos por intervalo de datas (máximo de 14 dias por consulta na interface).
+- Pesquisa universal por nome de clube, seleção, país ou competição.
+- Procura equipas/seleções e competições em paralelo.
+- Permite escolher uma equipa ou competição encontrada e abrir a pesquisa de jogos.
+- Filtra por estado, competição, época e equipa.
+- Mostra data/hora em Africa/Luanda.
+- Guarda jogos no histórico local do navegador.
+- Interface responsiva para Android e computador.
+
+FONTE DE DADOS
+Esta versão continua preparada para API-Football v3:
+https://www.api-football.com/documentation-v3
+
+A documentação oficial indica:
+- /teams aceita search, country, league e season.
+- /leagues aceita search, country, season e type.
+- /fixtures aceita date, from, to, league, season, team, status e timezone.
+A cobertura efetiva varia por competição, época e tipo de dados. Nem todos os jogos ou estatísticas estão necessariamente disponíveis.
+
+CONFIGURAÇÃO LOCAL (Node.js 18+)
+1. Obter uma chave API-Football no painel oficial.
+2. Definir a variável API_FOOTBALL_KEY no ambiente do servidor.
+3. Executar:
+   npm start
+4. Abrir http://localhost:3000
+
+DEPLOY NO RENDER
+- O projeto inclui package.json e render.yaml.
+- Criar um Web Service a partir de um repositório GitHub com estes ficheiros.
+- Build Command: npm install
+- Start Command: npm start
+- Adicionar a variável de ambiente API_FOOTBALL_KEY no painel do Render.
+- Não inserir a chave em index.html, no GitHub, em capturas de ecrã ou mensagens.
+- O serviço precisa de uma chave válida antes de poder apresentar dados reais.
+
+IMPORTANTE
+- Este pacote não inclui nem cria uma chave API.
+- O utilizador ainda precisa de obter a chave e adicioná-la como variável secreta no Render.
+- Não está ligado ao FootballData.io. A integração com esse fornecedor exigiria um adaptador diferente.
+- Não está ligado à Elephant Bet.
+- Não gera ainda previsões, odds ou recomendações de apostas. Esta versão foca-se na pesquisa e consulta de jogos reais.
+- "Todas as competições" significa todas as competições cobertas pelo fornecedor e pelo plano/época disponíveis, não uma garantia de cobertura universal.
+- O histórico é guardado apenas no armazenamento local do navegador utilizado.

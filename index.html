@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b2d"><title>MÁRIO TIPS AI 3.0</title>
+<style>
+:root{--bg:#0a1220;--panel:#111e31;--panel2:#17283d;--line:#293a51;--text:#edf4fb;--muted:#9aabc0;--green:#29c58d;--amber:#f4bd55;--red:#ff7777}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Arial,sans-serif}
+header{padding:22px max(18px,calc((100% - 1100px)/2));background:linear-gradient(125deg,#10243a,#123d39);border-bottom:1px solid #28514d}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:13px;background:var(--green);color:#06251b;display:grid;place-items:center;font-size:23px;font-weight:900}
+h1{font-size:20px;margin:0}.sub{font-size:11px;letter-spacing:1.4px;color:#b7c9d6}.hero{margin-top:22px}.hero h2{font-size:clamp(25px,5vw,36px);line-height:1.13;margin:0 0 8px}.hero p{margin:0;color:#c4d3df}
+main{max-width:1100px;margin:20px auto;padding:0 15px 42px}.nav{display:flex;gap:8px;overflow:auto;margin-bottom:16px}.nav button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer;font:inherit;font-weight:650;white-space:nowrap}.nav button.active,.btn.primary{background:var(--green);color:#06251b;border-color:var(--green)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;margin:12px 0}.panel h3{margin:0 0 10px;font-size:17px}.muted{color:var(--muted)}.small{font-size:12px}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+label{display:block;color:var(--muted);font-size:12px;margin:10px 0 5px}input,select{width:100%;background:#0b1627;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px;font:inherit}
+button:disabled{opacity:.55;cursor:wait}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row.between{justify-content:space-between}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1;min-width:130px}
+.fixture,.result-item{border-top:1px solid var(--line);padding:13px 0}.fixture:first-child,.result-item:first-child{border-top:0}
+.fixture-title{font-weight:760}.meta{font-size:12px;color:var(--muted)}.score{font-weight:800;color:#a9e9d0}.tag{display:inline-block;font-size:11px;border-radius:20px;padding:4px 8px;background:#173e35;color:#8ce4c1}.tag.neutral{background:#25354a;color:#c5d1df}
+.notice{border-left:3px solid var(--amber);padding:11px 12px;background:#292519;color:#f3dcae;border-radius:5px;font-size:12px;margin-top:14px}.message{white-space:pre-wrap;color:var(--muted);font-size:13px;margin:10px 0}.empty{padding:20px;text-align:center;color:var(--muted)}.hidden{display:none!important}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.subhead{font-size:13px;color:#c9d8e7;font-weight:750;margin:12px 0 3px}
+footer{border-top:1px solid var(--line);padding:18px;text-align:center;color:var(--muted);font-size:12px}
+@media(max-width:650px){.controls,.result-grid{grid-template-columns:1fr}.actions button{min-width:100%}.panel{padding:13px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">M</div><div><h1>MÁRIO TIPS AI 3.0</h1><div class="sub">FOOTBALL INTELLIGENCE · CLUBES & SELEÇÕES</div></div></div>
+ <div class="hero"><h2>Pesquisa universal de futebol.</h2><p>Procura equipas, seleções, países e competições. Consulta jogos reais disponíveis no fornecedor.</p></div>
+</header>
+<main>
+<nav class="nav">
+ <button class="active" data-tab="jogos">Jogos</button>
+ <button data-tab="universal">Pesquisa universal</button>
+ <button data-tab="competicoes">Competições</button>
+ <button data-tab="historico">Histórico</button>
+</nav>
+
+<section id="jogos">
+ <div class="panel">
+  <h3>Pesquisar jogos</h3>
+  <div class="controls">
+   <div><label for="from">De</label><input id="from" type="date"></div>
+   <div><label for="to">Até</label><input id="to" type="date"></div>
+   <div><label for="status">Estado do jogo</label><select id="status"><option value="">Todos</option><option value="NS">Por começar</option><option value="LIVE">Em direto</option><option value="FT">Terminados</option></select></div>
+   <div><label for="leagueId">ID da competição (opcional)</label><input id="leagueId" inputmode="numeric" placeholder="Ex.: ID encontrado"></div>
+   <div><label for="season">Época (opcional)</label><input id="season" inputmode="numeric" placeholder="Ex.: 2026"></div>
+   <div><label for="teamId">ID da equipa/seleção (opcional)</label><input id="teamId" inputmode="numeric" placeholder="ID encontrado"></div>
+  </div>
+  <div class="actions"><button class="btn primary" id="searchFixtures">Pesquisar jogos reais</button><button class="btn" id="next7">Próximos 7 dias</button><button class="btn" id="today">Hoje</button></div>
+  <div id="fixtureMessage" class="message">Configura a chave API no servidor para ativar as consultas reais.</div>
+ </div>
+ <div class="panel"><h3>Resultados</h3><div id="fixtures" class="empty">Ainda não foi feita nenhuma pesquisa.</div></div>
+</section>
+
+<section id="universal" class="hidden">
+ <div class="panel">
+  <h3>Pesquisa universal</h3>
+  <p class="muted small">Escreve pelo menos 3 caracteres: Angola, Brasil, Nigéria, Real Madrid, Barcelona, Mundial, CAN...</p>
+  <label for="universalQuery">Equipa, seleção, país ou competição</label>
+  <input id="universalQuery" placeholder="Ex.: Angola ou Africa Cup of Nations">
+  <button class="btn primary" id="doUniversal" style="width:100%;margin-top:10px">Pesquisar em equipas e competições</button>
+  <div id="universalMessage" class="message"></div>
+ </div>
+ <div class="result-grid">
+  <div class="panel"><h3>Equipas e seleções</h3><div id="teamResults" class="empty">Os resultados aparecerão aqui.</div></div>
+  <div class="panel"><h3>Competições</h3><div id="leagueResults" class="empty">Os resultados aparecerão aqui.</div></div>
+ </div>
+</section>
+
+<section id="competicoes" class="hidden">
+ <div class="panel">
+  <h3>Explorar competições</h3>
+  <p class="muted small">Pesquisa pelo nome da competição ou país. A cobertura depende dos dados disponibilizados pelo fornecedor e da época.</p>
+  <label for="competitionQuery">Competição ou país</label><input id="competitionQuery" placeholder="Ex.: World Cup, Africa, Spain, England">
+  <button class="btn primary" id="doCompetitions" style="width:100%;margin-top:10px">Pesquisar competições</button>
+  <div id="competitionMessage" class="message"></div>
+  <div id="competitionResults"></div>
+ </div>
+</section>
+
+<section id="historico" class="hidden">
+ <div class="panel"><h3>Histórico pessoal</h3><p class="muted small">Guarda jogos para acompanhar. O resultado só deve ser marcado depois de confirmado.</p><div id="history" class="empty">Ainda não guardaste jogos.</div><button class="btn" id="clearHistory" style="margin-top:12px">Apagar histórico</button></div>
+</section>
+
+<div class="notice"><b>Transparência:</b> esta versão pesquisa jogos reais através da API-Football quando a chave estiver configurada. “Todas as competições” significa todas as competições que o fornecedor disponibiliza para a época e o plano utilizados. A cobertura não é igual em todas as ligas, taças ou amigáveis. Esta versão ainda não calcula palpites nem está ligada à Elephant Bet. As probabilidades só serão acrescentadas depois de integrarmos estatísticas adequadas e testarmos o modelo.</div>
+</main>
+<footer>MÁRIO TIPS AI 3.0 · Interface adaptada a Android e computador · Joga com responsabilidade.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const luandaDate=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Luanda",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+function addDays(iso,n){const d=new Date(iso+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
+const today=luandaDate();$("from").value=today;$("to").value=addDays(today,7);
+let history=JSON.parse(localStorage.getItem("mario-tips-history")||"[]");
+async function api(url){const r=await fetch(url);const d=await r.json();if(!r.ok||d.error)throw new Error(d.error+(d.details?" "+JSON.stringify(d.details):""));return d}
+function showTab(id){document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.querySelectorAll("main section").forEach(s=>s.classList.toggle("hidden",s.id!==id))}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+function fixtureMarkup(f){const h=f.teams?.home?.name||"Casa",a=f.teams?.away?.name||"Visitante",league=f.league?.name||"Competição",country=f.league?.country||"",status=f.fixture?.status?.long||"Estado indisponível",date=f.fixture?.date?new Date(f.fixture.date).toLocaleString("pt-PT",{timeZone:"Africa/Luanda",dateStyle:"short",timeStyle:"short"}):"Hora por confirmar",gh=f.goals?.home,ga=f.goals?.away,score=(gh===null||gh===undefined?"-":gh)+" : "+(ga===null||ga===undefined?"-":ga),id=f.fixture?.id;
+return `<div class="fixture"><div class="row between"><span class="tag">${escapeHtml(league)}</span><span class="meta">${escapeHtml(country)}</span></div><div class="fixture-title" style="margin-top:7px">${escapeHtml(h)} vs ${escapeHtml(a)}</div><div class="row between"><span class="meta">${escapeHtml(date)} · ${escapeHtml(status)}</span><span class="score">${score}</span></div><div class="actions"><button class="btn" onclick="saveFixture('${String(id||"")}','${escapeAttr(h+" vs "+a)}','${escapeAttr(league)}','${escapeAttr(date)}')">Guardar jogo</button></div></div>`}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function escapeAttr(s){return String(s).replace(/['"\\]/g,"")}
+async function searchFixtures(){const from=$("from").value,to=$("to").value;if(!from||!to)return $("fixtureMessage").textContent="Seleciona as duas datas.";if(to<from)return $("fixtureMessage").textContent="A data final não pode ser anterior à inicial.";const days=(new Date(to+"T00:00:00Z")-new Date(from+"T00:00:00Z"))/86400000;if(days>14)return $("fixtureMessage").textContent="Para proteger o limite de pedidos, pesquisa períodos até 14 dias de cada vez.";let p=new URLSearchParams({from,to});for(const [key,id] of [["league","leagueId"],["season","season"],["team","teamId"]])if($(id).value.trim())p.set(key,$(id).value.trim());if($("status").value==="LIVE")p.set("live","all");else if($("status").value)p.set("status",$("status").value);$("fixtureMessage").textContent="A consultar jogos...";$("fixtures").innerHTML="";try{let d=await api("/api/fixtures?"+p);let list=d.response||[];$("fixtureMessage").textContent=`Consulta concluída: ${list.length} jogo(s) encontrado(s) no fornecedor.`;$("fixtures").innerHTML=list.length?list.map(fixtureMarkup).join(""):'<div class="empty">Não foram encontrados jogos com estes filtros. Experimenta outras datas ou remove os filtros.</div>'}catch(e){$("fixtureMessage").textContent="Não foi possível pesquisar: "+e.message;$("fixtures").innerHTML='<div class="empty">Verifica a chave API e a configuração do servidor.</div>'}}
+$("searchFixtures").onclick=searchFixtures;$("today").onclick=()=>{$("from").value=today;$("to").value=today;searchFixtures()};$("next7").onclick=()=>{$("from").value=luandaDate();$("to").value=addDays($("from").value,7);searchFixtures()};
+async function universalSearch(){const q=$("universalQuery").value.trim();if(q.length<3){$("universalMessage").textContent="Escreve pelo menos 3 caracteres.";return}$("universalMessage").textContent="A pesquisar equipas, seleções e competições...";$("teamResults").innerHTML="";$("leagueResults").innerHTML="";try{const d=await api("/api/search?q="+encodeURIComponent(q));const teams=d.teams||[],leagues=d.leagues||[];$("universalMessage").textContent=`Pesquisa concluída: ${teams.length} equipa(s)/seleção(ões) e ${leagues.length} competição(ões).`;$("teamResults").innerHTML=teams.length?teams.map(x=>{const t=x.team||{},v=x.venue||{};return `<div class="result-item"><b>${escapeHtml(t.name||"Equipa")}</b><div class="meta">${escapeHtml(t.country||"País não indicado")} · ${t.national?"Seleção nacional":"Clube/equipa"} </div><button class="btn" onclick="useTeam(${Number(t.id)||0})">Ver jogos desta equipa</button></div>`}).join(""):'<div class="empty">Nenhuma equipa encontrada.</div>';$("leagueResults").innerHTML=leagues.length?leagues.map(x=>{const l=x.league||{},c=x.country||{},seasons=x.seasons||[],current=seasons.find(s=>s.current)||seasons[seasons.length-1];return `<div class="result-item"><b>${escapeHtml(l.name||"Competição")}</b><div class="meta">${escapeHtml(c.name||"")} · ${escapeHtml(l.type||"Competição")} · ID ${l.id}</div><div class="meta">Época disponível: ${current?.year||"consultar fornecedor"}</div><button class="btn" onclick="useLeague(${Number(l.id)||0},${Number(current?.year)||0})">Ver jogos desta competição</button></div>`}).join(""):'<div class="empty">Nenhuma competição encontrada.</div>'}catch(e){$("universalMessage").textContent="Erro na pesquisa: "+e.message}}
+$("doUniversal").onclick=universalSearch;$("universalQuery").addEventListener("keydown",e=>{if(e.key==="Enter")universalSearch()});
+window.useTeam=id=>{if(!id)return;$("teamId").value=id;$("leagueId").value="";$("season").value="";$("from").value=luandaDate();$("to").value=addDays($("from").value,14);showTab("jogos");searchFixtures()};
+window.useLeague=(id,season)=>{if(!id)return;$("leagueId").value=id;if(season)$("season").value=season;$("teamId").value="";$("from").value=luandaDate();$("to").value=addDays($("from").value,14);showTab("jogos");searchFixtures()};
+async function searchCompetitions(){const q=$("competitionQuery").value.trim();if(q.length<3){$("competitionMessage").textContent="Escreve pelo menos 3 caracteres.";return}$("competitionMessage").textContent="A pesquisar...";$("competitionResults").innerHTML="";try{const d=await api("/api/leagues?search="+encodeURIComponent(q));const list=d.response||[];$("competitionMessage").textContent=`${list.length} competição(ões) encontrada(s).`;$("competitionResults").innerHTML=list.length?list.map(x=>{const l=x.league||{},c=x.country||{},ss=x.seasons||[],s=ss.find(a=>a.current)||ss[ss.length-1];return `<div class="result-item"><b>${escapeHtml(l.name||"")}</b><div class="meta">${escapeHtml(c.name||"")} · ${escapeHtml(l.type||"")} · ID ${l.id}</div><div class="meta">Época: ${s?.year||"não indicada"}</div><button class="btn" onclick="useLeague(${Number(l.id)||0},${Number(s?.year)||0})">Pesquisar jogos</button></div>`}).join(""):'<div class="empty">Sem resultados para esta pesquisa.</div>'}catch(e){$("competitionMessage").textContent="Erro: "+e.message}}
+$("doCompetitions").onclick=searchCompetitions;$("competitionQuery").addEventListener("keydown",e=>{if(e.key==="Enter")searchCompetitions()});
+function saveFixture(id,name,league,date){history.unshift({id,name,league,date,saved:new Date().toLocaleDateString("pt-PT")});localStorage.setItem("mario-tips-history",JSON.stringify(history));renderHistory();alert("Jogo guardado no histórico deste navegador.")}
+function renderHistory(){$("history").innerHTML=history.length?history.map((h,i)=>`<div class="fixture"><b>${escapeHtml(h.name)}</b><div class="meta">${escapeHtml(h.league)} · ${escapeHtml(h.date)} · Guardado ${escapeHtml(h.saved)}</div><button class="btn" onclick="removeHistory(${i})">Remover</button></div>`).join(""):'<div class="empty">Ainda não guardaste jogos.</div>'}
+window.removeHistory=i=>{history.splice(i,1);localStorage.setItem("mario-tips-history",JSON.stringify(history));renderHistory()};
+$("clearHistory").onclick=()=>{if(confirm("Apagar todos os jogos guardados neste navegador?")){history=[];localStorage.removeItem("mario-tips-history");renderHistory()}};
+renderHistory();
+</script>
+</body></html>

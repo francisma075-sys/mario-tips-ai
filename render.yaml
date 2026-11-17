@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mario-tips-ai
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: API_FOOTBALL_KEY
+        sync: false
